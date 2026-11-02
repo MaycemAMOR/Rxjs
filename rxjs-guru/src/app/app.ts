@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 
 @Component({
@@ -7,6 +7,18 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App {
-  protected readonly title = signal('rxjs-guru');
+export class App implements OnInit {
+  ngOnInit() {
+    const observer = {
+      next: (item: unknown) => {
+        console.log(`une boite arrive ${item}`);
+      },
+      error: (error: unknown) => {
+        console.log(`oups il y a une erreur ${error}`);
+      },
+      complete: () => {
+        console.log(`terminé ... plus rien`);
+      },
+    };
+  }
 }
