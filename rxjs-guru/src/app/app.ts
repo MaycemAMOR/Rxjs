@@ -24,9 +24,10 @@ export class App implements OnInit {
 
     const stream = new Observable((myObserver) => {
       myObserver.next('Boite 1');
+      myObserver.error(new Error());
       myObserver.next('Boite 2');
-      myObserver.next('Boite 3');
       myObserver.complete();
+      myObserver.next('Boite 3');
     });
 
     console.log('first way to subscribe to an observable');
