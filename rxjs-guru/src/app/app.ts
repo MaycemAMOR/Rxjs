@@ -9,7 +9,7 @@ import { Observable, interval, Subscription } from 'rxjs';
   templateUrl: './app.html',
 })
 export class App implements OnInit {
-  private subscription: Subscription[] = [];
+  private subscription: Subscription= new Subscription();
 
   ngOnInit() {
     const observer = {
@@ -45,7 +45,7 @@ export class App implements OnInit {
   }
 
   public start(): void {
-    this.subscription.push(
+    this.subscription.add(
       interval(1000).subscribe(
         (value) => console.log('ma valeur: ', value),
         (error) => console.error(error),
@@ -53,7 +53,7 @@ export class App implements OnInit {
       ),
     );
 
-    this.subscription.push(
+    this.subscription.add(
       interval(1000).subscribe(
         (value) => console.warn('=== ma valeur: === ', value),
         (error) => console.error(error),
@@ -63,8 +63,6 @@ export class App implements OnInit {
   }
 
   public stop(): void {
-    this.subscription.forEach(elem=>{
-      elem.unsubscribe();
-    });
+    this.subscription.unsubscribe();
   }
 }
