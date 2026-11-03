@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Observable, interval, Subscription, of, from, map, tap, take } from 'rxjs';
+import { Observable, interval, Subscription, of, from, map, tap, take, filter } from 'rxjs';
 @Component({
   imports: [RouterOutlet],
   selector: 'app-root',
@@ -11,20 +11,21 @@ export class App implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   ngOnInit() {
-    from([1, 2, 12, 13, 14, 0, 15])
+    from([1, 2, 0, undefined, 12, 0, 14, 0, 15])
       .pipe(
-        tap((ele) => console.log(ele)),
-        map((ele: number) => {
-          if (ele === 0) {
-            throw new Error('zero erreur');
-          }
-          return ele * 2;
-        }),
-        map((ele: number) => ele - 2),
-        take(2),
+        // tap((ele) => console.log(ele)),
+        // map((ele: number) => {
+        //   if (ele === 0) {
+        //     throw new Error('zero erreur');
+        //   }
+        //   return ele * 2;
+        // }),
+        // map((ele: number) => ele - 2),
+        // take(2),
+        filter((ele) => ele !== undefined && ele !== 0),
       )
       .subscribe(
-        (item: number) => console.log(`ma valeur ${item}`),
+        (item: number | undefined) => console.log(`ma valeur ${item}`),
         (error: unknown) => console.error(error),
         () => console.log('Terminé'),
       );
