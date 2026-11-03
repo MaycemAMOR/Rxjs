@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Observable, interval, Subscription, of, from, map, tap } from 'rxjs';
+import { Observable, interval, Subscription, of, from, map, tap, take } from 'rxjs';
 @Component({
   imports: [RouterOutlet],
   selector: 'app-root',
@@ -21,12 +21,23 @@ export class App implements OnInit, OnDestroy {
           return ele * 2;
         }),
         map((ele: number) => ele - 2),
+        take(2),
       )
       .subscribe(
         (item: number) => console.log(`ma valeur ${item}`),
         (error: unknown) => console.error(error),
         () => console.log('Terminé'),
       );
+
+    // of(2, 4, 6)
+    //   .pipe(
+    //     tap((elem) => console.log(elem)),
+    //     map((elem) => elem * 2),
+    //     take(2),
+    //     map((elem) => elem - 3),
+    //     tap((elem) => console.log(elem)),
+    //   )
+    //   .subscribe(console.log);
   }
 
   public start(): void {
