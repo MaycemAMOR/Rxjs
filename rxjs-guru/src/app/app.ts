@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Observable, interval, Subscription } from 'rxjs';
+import { Observable, interval, Subscription, of, from } from 'rxjs';
 
 @Component({
   imports: [RouterOutlet],
@@ -42,6 +42,14 @@ export class App implements OnInit, OnDestroy {
       () => console.log('terminé ... plus rien'),
     );
     subscription.unsubscribe();
+
+    of(1, 2, 3, 4).subscribe(console.log);
+
+    from([12, 13, 14, 15]).subscribe(
+      (item: number) => console.log(`ma valeur ${item}`),
+      (error: unknown) => console.error(error),
+      ()=> console.log('Terminé')
+    );
   }
 
   public start(): void {
@@ -66,7 +74,7 @@ export class App implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  ngOnDestroy():void {
+  ngOnDestroy(): void {
     this.subscription.unsubscribe(); // tres important pour eviter des fuite de memoir
   }
 }
