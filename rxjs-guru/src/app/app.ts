@@ -1,6 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Observable, interval, Subscription, of, from, map } from 'rxjs';
+import { Observable, interval, Subscription, of, from, map, tap } from 'rxjs';
 @Component({
   imports: [RouterOutlet],
   selector: 'app-root',
@@ -13,6 +13,7 @@ export class App implements OnInit, OnDestroy {
   ngOnInit() {
     from([1, 2, 12, 13, 14, 0, 15])
       .pipe(
+        tap((ele) => console.log(ele)),
         map((ele: number) => {
           if (ele === 0) {
             throw new Error('zero erreur');
