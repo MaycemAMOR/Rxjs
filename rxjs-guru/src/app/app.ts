@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Observable } from 'rxjs';
+import { Observable, interval } from 'rxjs';
 
 @Component({
   imports: [RouterOutlet],
@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
   templateUrl: './app.html',
 })
 export class App implements OnInit {
+  private subscription: any;
   ngOnInit() {
     const observer = {
       next: (item: unknown) => {
@@ -35,9 +36,22 @@ export class App implements OnInit {
 
     console.log('Second way to subscribe to an observable.');
     const subscription = stream.subscribe(
-      item => console.log(`Une boite arrive ${item}`),
-      error => console.log(`Oups il y a une erreur ${error}`),
-      ()=>console.log('terminé ... plus rien')
+      (item) => console.log(`Une boite arrive ${item}`),
+      (error) => console.log(`Oups il y a une erreur ${error}`),
+      () => console.log('terminé ... plus rien'),
     );
+    subscription.unsubscribe();
+  }
+
+  public start(): void {
+    this.subscription = interval(1000).subscribe(
+      (value) => console.log('ma valeur: ', value),
+      (error) => console.error(error),
+      () => console.log('terminé'),
+    );
+  }
+
+  public stop(): void {
+    this.subscription.unsubscribe();
   }
 }
