@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { Observable, interval, Subscription } from 'rxjs';
 
@@ -8,8 +8,8 @@ import { Observable, interval, Subscription } from 'rxjs';
   styleUrl: './app.css',
   templateUrl: './app.html',
 })
-export class App implements OnInit {
-  private subscription: Subscription= new Subscription();
+export class App implements OnInit, OnDestroy {
+  private subscription: Subscription = new Subscription();
 
   ngOnInit() {
     const observer = {
@@ -64,5 +64,9 @@ export class App implements OnInit {
 
   public stop(): void {
     this.subscription.unsubscribe();
+  }
+
+  ngOnDestroy():void {
+    this.subscription.unsubscribe(); // tres important pour eviter des fuite de memoir
   }
 }
