@@ -1,7 +1,6 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Observable, interval, Subscription, of, from } from 'rxjs';
-
+import { Observable, interval, Subscription, of, from, map } from 'rxjs';
 @Component({
   imports: [RouterOutlet],
   selector: 'app-root',
@@ -12,58 +11,21 @@ export class App implements OnInit, OnDestroy {
   private subscription: Subscription = new Subscription();
 
   ngOnInit() {
-    const observer = {
-      next: (item: unknown) => {
-        console.log(`une boite arrive ${item}`);
-      },
-      error: (error: unknown) => {
-        console.log(`oups il y a une erreur ${error}`);
-      },
-      complete: () => {
-        console.log(`terminé ... plus rien`);
-      },
-    };
-
-    const stream = new Observable((myObserver) => {
-      myObserver.next('Boite 1');
-      myObserver.error(new Error());
-      myObserver.next('Boite 2');
-      myObserver.complete();
-      myObserver.next('Boite 3');
-    });
-
-    console.log('first way to subscribe to an observable');
-    stream.subscribe(observer);
-
-    console.log('Second way to subscribe to an observable.');
-    const subscription = stream.subscribe(
-      (item) => console.log(`Une boite arrive ${item}`),
-      (error) => console.log(`Oups il y a une erreur ${error}`),
-      () => console.log('terminé ... plus rien'),
-    );
-    subscription.unsubscribe();
-
-    //
-    // from([12, 13, 14, 15]).subscribe(
-    //   (item: number) => console.log(`ma valeur ${item}`),
-    //   (error: unknown) => console.error(error),
-    //   ()=> console.log('Terminé')
-    // );
-
-    const double = (source: Observable<number>) =>
-      new Observable<number>((subscriber) => {
-        const subscription = source.subscribe({
-          next: (value) => subscriber.next(2 * value),
-          error: (err) => subscriber.error(err),
-          complete: () => subscriber.complete(),
-        });
-
-        return () => {
-          subscription.unsubscribe();
-        };
-      });
-
-    of(1, 2, 3, 4).pipe(double,double).subscribe(console.log);
+    from([1, 2, 12, 13, 14, 0, 15])
+      .pipe(
+        map((ele: number) => {
+          if (ele === 0) {
+            throw new Error('zero erreur');
+          }
+          return ele * 2;
+        }),
+        map((ele: number) => ele - 2),
+      )
+      .subscribe(
+        (item: number) => console.log(`ma valeur ${item}`),
+        (error: unknown) => console.error(error),
+        () => console.log('Terminé'),
+      );
   }
 
   public start(): void {
