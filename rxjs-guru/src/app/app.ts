@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { Observable, interval } from 'rxjs';
+import { Observable, interval, Subscription } from 'rxjs';
 
 @Component({
   imports: [RouterOutlet],
@@ -9,7 +9,8 @@ import { Observable, interval } from 'rxjs';
   templateUrl: './app.html',
 })
 export class App implements OnInit {
-  private subscription: any;
+  private subscription: Subscription[] = [];
+
   ngOnInit() {
     const observer = {
       next: (item: unknown) => {
@@ -44,14 +45,26 @@ export class App implements OnInit {
   }
 
   public start(): void {
-    this.subscription = interval(1000).subscribe(
-      (value) => console.log('ma valeur: ', value),
-      (error) => console.error(error),
-      () => console.log('terminé'),
+    this.subscription.push(
+      interval(1000).subscribe(
+        (value) => console.log('ma valeur: ', value),
+        (error) => console.error(error),
+        () => console.log('terminé'),
+      ),
+    );
+
+    this.subscription.push(
+      interval(1000).subscribe(
+        (value) => console.warn('=== ma valeur: === ', value),
+        (error) => console.error(error),
+        () => console.log('=== terminé ==='),
+      ),
     );
   }
 
   public stop(): void {
-    this.subscription.unsubscribe();
+    this.subscription.forEach(elem=>{
+      elem.unsubscribe();
+    });
   }
 }
